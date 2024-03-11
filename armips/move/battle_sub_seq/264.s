@@ -17,8 +17,23 @@ a001_264:
     if IF_MASK, VAR_SERVER_STATUS1, 0x8800, end_the_script
     if IF_MASK, VAR_MOVE_STATUS, 0x20, end_the_script
 
-    abilitycheck 0x1, BATTLER_ATTACKER, ABILITY_NORMALIZE, checkRefrigerate // if user does not have normalize, check for refrigerate
+    abilitycheck 0x1, BATTLER_ATTACKER, ABILITY_NORMALIZE, checkPollinate // if user does not have normalize, check for pollinate
     changevar VAR_OP_SET, VAR_CALCULATION_WORK, TYPE_NORMAL
+    goto _0088
+checkPollinate:
+    abilitycheck 0x1, BATTLER_ATTACKER, ABILITY_POLLINATE, checkImmolate
+    if IF_NOTEQUAL, VAR_MOVE_TYPE, TYPE_NORMAL, _0080 // grab move parameter and store it in var 9 if type is not normal
+    changevar VAR_OP_SET, VAR_CALCULATION_WORK, TYPE_GRASS
+    goto _0088
+checkImmolate:
+    abilitycheck 0x1, BATTLER_ATTACKER, ABILITY_IMMOLATE, checkRehydrate
+    if IF_NOTEQUAL, VAR_MOVE_TYPE, TYPE_NORMAL, _0080 // grab move parameter and store it in var 9 if type is not normal
+    changevar VAR_OP_SET, VAR_CALCULATION_WORK, TYPE_FIRE
+    goto _0088
+checkRehydrate:
+    abilitycheck 0x1, BATTLER_ATTACKER, ABILITY_REHYDRATE, checkRefrigerate
+    if IF_NOTEQUAL, VAR_MOVE_TYPE, TYPE_NORMAL, _0080 // grab move parameter and store it in var 9 if type is not normal
+    changevar VAR_OP_SET, VAR_CALCULATION_WORK, TYPE_WATER
     goto _0088
 checkRefrigerate:
     abilitycheck 0x1, BATTLER_ATTACKER, ABILITY_REFRIGERATE, checkAerilate

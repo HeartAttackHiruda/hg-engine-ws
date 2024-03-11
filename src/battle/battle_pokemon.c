@@ -1328,6 +1328,18 @@ u32 GetAdjustedMoveTypeBasics(struct BattleStruct *sp, u32 move, u32 ability, u3
         {
             typeLocal = TYPE_FAIRY;
         }
+        else if (ability == ABILITY_POLLINATE)
+        {
+            typeLocal = TYPE_GRASS;
+        }
+        else if (ability == ABILITY_IMMOLATE)
+        {
+            typeLocal = TYPE_FIRE;
+        }
+        else if (ability == ABILITY_REHYDRATE)
+        {
+            typeLocal = TYPE_WATER;
+        }
         else if (ability == ABILITY_REFRIGERATE)
         {
             typeLocal = TYPE_ICE;

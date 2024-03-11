@@ -620,6 +620,24 @@ int CalcBaseDamage(void *bw, struct BattleStruct *sp, int moveno, u32 side_cond,
         movepower = movepower * 120 / 100;
     }
 
+    // handle pollinate - 20% boost if a normal type move was changed to an grass type move.  does not boost grass type moves themselves
+    if (AttackingMon.ability == ABILITY_POLLINATE && movetype == TYPE_GRASS && sp->moveTbl[moveno].type == TYPE_NORMAL)
+    {
+        movepower = movepower * 120 / 100;
+    }
+
+    // handle immolate - 20% boost if a normal type move was changed to an fire type move.  does not boost fire type moves themselves
+    if (AttackingMon.ability == ABILITY_IMMOLATE && movetype == TYPE_FIRE && sp->moveTbl[moveno].type == TYPE_NORMAL)
+    {
+        movepower = movepower * 120 / 100;
+    }
+
+    // handle rehydrate - 20% boost if a normal type move was changed to an water type move.  does not boost water type moves themselves
+    if (AttackingMon.ability == ABILITY_REHYDRATE && movetype == TYPE_WATER && sp->moveTbl[moveno].type == TYPE_NORMAL)
+    {
+        movepower = movepower * 120 / 100;
+    }
+
     // handle normalize - 20% boost if a normal type move is used (and it changes types to normal too)
     if (AttackingMon.ability == ABILITY_NORMALIZE && movetype == TYPE_NORMAL)
     {

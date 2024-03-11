@@ -1,5 +1,5 @@
  -
-The stench helps keep\nwild Pokémon away.
+Lowers the foe’s\nSpecial Attack stat.
 The Pokémon makes it rain\nif it appears in battle.
 Its Speed stat is\ngradually boosted.
 The Pokémon is protected\nagainst critical hits.
@@ -63,9 +63,9 @@ The Pokémon may heal its\nown status problems.
 Boosts Attack if there is\na status problem.
 Ups Defense if there is\na status problem.
 Inflicts damage on foes\nusing any draining move.
-Powers up Grass-type\nmoves in a pinch.
-Powers up Fire-type\nmoves in a pinch.
-Powers up Water-type\nmoves in a pinch.
+Normal-type moves become\nGrass-type and power up.
+Normal-type moves become\nFire-type and power up.
+Normal-type moves become\nWater-type and power up.
 Powers up Bug-type\nmoves in a pinch.
 Protects the Pokémon\nfrom recoil damage.
 The Pokémon makes it\nsunny if it is in battle.

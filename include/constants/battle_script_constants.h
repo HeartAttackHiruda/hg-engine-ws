@@ -364,6 +364,9 @@
 #define SUB_SEQ_CREATE_TERRAIN_OVERLAY                (354)
 #define SUB_SEQ_HANDLE_SHED_TAIL                      (355)
 
+// Custom stuff!
+#define SUB_SEQ_FRIGHTEN                     (356)
+
 
 
 // add status effect constants--used in battle effect scripts to queue up a subscript through the table in src/moves.c

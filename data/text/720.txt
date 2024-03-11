@@ -1,5 +1,5 @@
  -
-Stench
+Frighten
 Drizzle
 Speed Boost
 Battle Armor
@@ -63,9 +63,9 @@ Shed Skin
 Guts
 Marvel Scale
 Liquid Ooze
-Overgrow
-Blaze
-Torrent
+Pollinate
+Immolate
+Rehydrate
 Swarm
 Rock Head
 Drought

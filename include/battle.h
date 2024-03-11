@@ -674,6 +674,7 @@ struct __attribute__((packed)) BattlePokemon
                /** switch in flags to mark it as having been done */
     /* 0x28 */ u32 appear_check_flag : 1;    /**< has appeared */
                u32 intimidate_flag : 1;      /**< intimidate has activated */
+               u32 frighten_flag : 1;        /**< frighten has activated */
                u32 trace_flag : 1;           /**< trace has activated */
                u32 download_flag : 1;        /**< download has activated */
                u32 anticipation_flag : 1;    /**< anticipation has printed its message */

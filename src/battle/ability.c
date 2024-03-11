@@ -33,6 +33,9 @@ void ServerWazaOutAfterMessage(void *bw, struct BattleStruct *sp);
 //u32 ServerWazaKoyuuCheck(void *bw, struct BattleStruct *sp);
 void ServerDoPostMoveEffects(void *bw, struct BattleStruct *sp);
 
+// Custom stuff
+BOOL FrightenCheckHelper(struct BattleStruct *sp, u32 client);
+
 
 
 extern const u8 StatBoostModifiers[][2];
@@ -293,6 +296,10 @@ enum
     SWITCH_IN_CHECK_SURGE_ABILITY,
     SWITCH_IN_CHECK_TERRAIN_SEED,
     SWITCH_IN_CHECK_END,
+
+// Custom stuff
+    SWITCH_IN_CHECK_FRIGHTEN,
+
 };
 
 enum
@@ -336,7 +343,39 @@ BOOL IntimidateCheckHelper(struct BattleStruct *sp, u32 client)
     return FALSE; // neither opposing battler has an ability that intimidate can activate on
 }
 
-
+/**
+ *  @brief see if the ability frighten should activate depending on the abilities/stat stages it is up against
+ *         assumption is that the client has already been checked for frighten's presence; we don't need to here
+ *
+ *  @param sp global battle structure
+ *  @param client battler to check if either opponent has an ability that doesn't negate frighten
+ *  @return TRUE if frighten can get through either of the opponent's abilities; FALSE otherwise
+ */
+BOOL FrightenCheckHelper(struct BattleStruct *sp, u32 client)
+{
+    u32 clientCheck;
+    for (int i = 0; i < 2; i++)
+    {
+        clientCheck = i ? BATTLER_ACROSS(client) : BATTLER_OPPONENT(client);
+        if (sp->battlemon[clientCheck].hp
+         && sp->battlemon[clientCheck].states[STAT_SPATK] > 0)
+        {
+            u32 ability = GetBattlerAbility(sp, clientCheck);
+            switch (ability)
+            {
+            case ABILITY_INNER_FOCUS:
+            case ABILITY_SCRAPPY:
+            case ABILITY_OBLIVIOUS:
+            case ABILITY_OWN_TEMPO:
+            case ABILITY_FULL_METAL_BODY:
+                break;
+            default: // frighten can affect at least one opposing battler
+                return TRUE;
+            }
+        }
+    }
+    return FALSE; // neither opposing battler has an ability that frighten can activate on
+}
 
 /**
  *  @brief this function is basically run whenever it can (i.e. if a battler suddenly gains Mold Breaker), but it's easiest to think of it as on switch in.
@@ -547,6 +586,27 @@ int SwitchInAbilityCheck(void *bw, struct BattleStruct *sp)
                         sp->battlemon[client_no].intimidate_flag = 1;
                         sp->client_work = client_no;
                         scriptnum = SUB_SEQ_INTIMIDATE;
+                        ret = SWITCH_IN_CHECK_MOVE_SCRIPT;
+                        break;
+                    }
+                }
+                if (i == client_set_max){
+                    sp->switch_in_check_seq_no++;
+                }
+                break;
+                // 022534BE
+            case SWITCH_IN_CHECK_FRIGHTEN:
+                for (i = 0; i < client_set_max; i++)
+                {
+                    client_no = sp->turn_order[i];
+                    if ((sp->battlemon[client_no].frighten_flag == 0)
+                        && (sp->battlemon[client_no].hp)
+                        && (GetBattlerAbility(sp, client_no) == ABILITY_FRIGHTEN)
+                        && (FrightenCheckHelper(sp, client_no)))
+                    {
+                        sp->battlemon[client_no].frighten_flag = 1;
+                        sp->client_work = client_no;
+                        scriptnum = SUB_SEQ_FRIGHTEN;
                         ret = SWITCH_IN_CHECK_MOVE_SCRIPT;
                         break;
                     }
@@ -1116,6 +1176,7 @@ int SwitchInAbilityCheck(void *bw, struct BattleStruct *sp)
                 sp->battlemon[sp->attack_client].moveeffect.slowStartTurns = sp->total_turn + 1;
                 sp->battlemon[sp->attack_client].slow_start_flag = 0;
                 sp->battlemon[sp->attack_client].slow_start_end_flag = 0;
+                sp->battlemon[sp->attack_client].frighten_flag = 0;
                 ClearBattleMonFlags(sp, sp->attack_client); // clear extra flags here too
 
                 for(i = 0; i < 4; i++)
@@ -2270,11 +2331,11 @@ BOOL ServerFlinchCheck(void *bw, struct BattleStruct *sp)
     heldeffect = HeldItemHoldEffectGet(sp, sp->attack_client);
     atk = HeldItemAtkGet(sp, sp->attack_client, 0);
 
-    if (GetBattlerAbility(sp, sp->attack_client) == ABILITY_STENCH) // stench adds 10% flinch chance
+ /*   if (GetBattlerAbility(sp, sp->attack_client) == ABILITY_STENCH) // stench adds 10% flinch chance
     {
         atk += 10;
         heldeffect = HOLD_EFFECT_INCREASE_FLINCH; // doesn't permanently change the hold effect, just for this function
-    }
+    }*/
 
     if (sp->defence_client != 0xFF)
     {
